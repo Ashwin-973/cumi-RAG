@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+from dotenv import load_dotenv
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+load_dotenv()                    
+import os
 
 
 class Settings(BaseSettings):
@@ -12,9 +16,9 @@ class Settings(BaseSettings):
     )
 
     # ── Pinecone ──────────────────────────────────────────────────────────────
-    PINECODE_API_KEY:    str = ""
+    PINECONE_API_KEY:    str = os.environ["PINECODE_DEFAULT_API_KEY"]
     PINECONE_INDEX_NAME: str = "cumi-abrasives-index"
-    PINECONE_EMBED_MODEL:  str = "llama-text-embed-v2-1024"
+    PINECONE_EMBED_MODEL:  str = "llama-text-embed-v2"
     PINECONE_RERANK_MODEL: str = "bge-reranker-v2-m3"
     PINECONE_EMBED_DIM:    int = 1024
     SEARCH_TOP_N:          int = 30    # candidates fetched before reranking
