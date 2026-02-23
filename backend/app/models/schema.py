@@ -1,9 +1,3 @@
-"""
-backend/app/models/schema.py
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-Pydantic v2 request / response schemas for the /ask endpoint.
-"""
-
 from __future__ import annotations #* allows new syntax in older python versions
 
 from typing import Any
@@ -20,24 +14,25 @@ class QueryRequest(BaseModel):
     brand_filter:    str | None = Field(default=None, description="Optional: filter by exact brand name.")
     category_filter: str | None = Field(default=None, description="Optional: filter by main category.")
 
+
+class ActionLinks(BaseModel):
+    store_url:     str
+    catalogue_pdf: str
+    
 ''' 
     result of single product returned
 '''
-class ProductResult(BaseModel):
-    rerank_score:   float
-    product_name:   str
-    brand:          str
-    category:       str
-    sub_category:   str
-    url:            str
-    # image_url:      str
-    catalogue_url:  str
-    specifications: str
+class RecommendedProduct(BaseModel):
+    product_name: str
+    brand:        str
+    badges:       list[str]        # [category, sub_category]
+    key_specs:    dict[str, str]   # parsed from specifications JSON
+    action_links: ActionLinks
 
 '''
     the entire response sent back to the client
 '''
 class QueryResponse(BaseModel):
-    query:    str
-    answer:   str
-    products: list[ProductResult]
+    conversational_response: str
+    recommended_products:    list[RecommendedProduct]
+    suggested_follow_ups:    list[str]

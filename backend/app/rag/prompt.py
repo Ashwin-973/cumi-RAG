@@ -35,16 +35,23 @@ def build_rag_prompt(user_query: str, retrieved_products: list[dict[str, Any]]) 
             sections.append(section)
         context_block = "\n\n".join(sections)
 
-    prompt = f"""You are a knowledgeable product advisor for CUMI Abrasives. \
-Answer the customer's question using ONLY the product information provided below. \
-Do not invent specifications, prices, or availability. \
-If the context does not contain enough information, say so clearly and suggest \
-the customer visit the product URL or contact CUMI support.
+    prompt = f"""You are a product advisor for CUMI Abrasives.
 
-{context_block} #*PRODUCT CONTEXT
+INSTRUCTIONS:
+- Answer using ONLY the product context below. Do not invent specs, prices, or names.
+- Your ENTIRE output must be a single flat JSON object with exactly two keys.
+- No markdown, no code fences, no preamble — raw JSON only.
+- "conversational_response" must be a plain text string — NOT a JSON object or nested structure.
+- "suggested_follow_ups" must be an array of exactly 3 short strings at the root level.
+
+EXAMPLE OUTPUT (follow this structure exactly):
+{{"conversational_response": "Based on your need, the 500 RFT Diamond Segmented Saw is ideal for tile cutting. It has a 110mm diameter and 10 segments, making it compatible with standard angle grinders.", "suggested_follow_ups": ["Do you have this in 125mm?", "What is the price of this blade?", "Can it cut marble as well?"]}}
+
+PRODUCT CONTEXT:
+{context_block}
 
 Customer Question: {user_query}
 
-Your Answer (be concise, cite product names, and include the URL when recommending a specific product):"""
+Your JSON output:"""
 
     return prompt

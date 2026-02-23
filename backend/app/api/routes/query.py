@@ -34,7 +34,7 @@ async def ask(request: QueryRequest) -> QueryResponse:
 
     #*format response using pydantic
     return QueryResponse(
-        query=result["query"],
-        answer=result["answer"],
-        products=result["products"],
-    )
+    conversational_response=result["conversational_response"],
+    recommended_products=result["recommended_products"],
+    suggested_follow_ups=result["suggested_follow_ups"],
+)
